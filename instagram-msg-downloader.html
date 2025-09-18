@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Chat HTML to Excel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background: #f8f9fa;
+    }
+    h1 { color: #333; }
+    input { margin: 20px; }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <h1>📥 Instagram Chat (HTML) → Excel</h1>
+  <p>Upload your <b>messages.html</b> file</p>
+  
+  <input type="file" id="fileInput" accept=".html">
+  <br>
+  <button onclick="convertToExcel()">Convert & Download Excel</button>
+
+  <script>
+    function cleanText(text, limit = 1500) {
+      return text.replace(/\s+/g, " ").trim().substring(0, limit);
+    }
+
+    function convertToExcel() {
+      const fileInput = document.getElementById("fileInput");
+      if (!fileInput.files.length) {
+        alert("Please select your Instagram HTML file.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        try {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(e.target.result, "text/html");
+
+          const chatBlocks = doc.querySelectorAll("div.pam._3-95._2ph-._a6-g.uiBoxWhite.noborder");
+
+          let messages = [];
+          let uniqueSet = new Set();
+
+          chatBlocks.forEach(block => {
+            let sender = cleanText(block.querySelector("h2")?.textContent || "Unknown");
+
+            let message = cleanText(
+              block.querySelector("div._3-95._a6-p div div div")?.textContent || "",
+              1500
+            );
+
+            let reelOwner = cleanText(
+              block.querySelector("div._3-95._a6-p div div div div:nth-child(2)")?.textContent || ""
+            );
+
+            let reelLink = block.querySelector("a")?.getAttribute("href") || "";
+
+            let timestamp = cleanText(block.querySelector("div._3-94._a6-o")?.textContent || "");
+
+            // ✅ Skip if no message & no reel owner title
+            if (!message && !reelOwner) return;
+
+            // Unique key for deduplication
+            let key = sender + "|" + message + "|" + reelOwner + "|" + reelLink + "|" + timestamp;
+
+            if (!uniqueSet.has(key)) {
+              uniqueSet.add(key);
+              messages.push({
+                Sender: sender,
+                Message: message,
+                "Reel Owner Title": reelOwner,
+                "Reel Link": reelLink,
+                Timestamp: timestamp
+              });
+            }
+          });
+
+          if (messages.length === 0) {
+            alert("⚠️ No valid messages found. Please check HTML structure.");
+            return;
+          }
+
+          // Convert to worksheet
+          const ws = XLSX.utils.json_to_sheet(messages);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "Chats");
+
+          // Export Excel
+          XLSX.writeFile(wb, "instagram_chat.xlsx");
+
+        } catch (err) {
+          alert("Error parsing HTML file: " + err.message);
+        }
+      };
+
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+</html>
