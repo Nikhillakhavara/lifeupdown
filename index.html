@@ -6,7 +6,7 @@
   <title>Life Up Down</title>
   <style>
     body {
-      margin: 0;
+    margin: 0;
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -14,14 +14,51 @@
       font-family: Arial, sans-serif;
       transition: background-color 0.3s ease;
       background-color: lightblue;
+      flex-direction: column; /* So header stays on top */
     }
     h1 {
-      color: white;
+     color: white;
       text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+      margin-top: 80px; /* Push below header */
+    }
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: yellow;
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
+  <header>
+    <h2>LifeUpDown</h2>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Instagram to Excel</a>
+    </nav>
+  </header>
   <h1>Life Up Down</h1>
 
   <script>
@@ -48,3 +85,4 @@
   </script>
 </body>
 </html>
+
