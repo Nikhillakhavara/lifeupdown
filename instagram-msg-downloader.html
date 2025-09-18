@@ -7,32 +7,166 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 40px;
-      background: #f8f9fa;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      color: #333;
     }
-    h1 { color: #333; }
-    input { margin: 20px; }
+    .container {
+      max-width: 900px;
+     margin: 100px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+    p.center { text-align: center; margin-bottom: 20px; }
+    input[type="file"] {
+      display: block;
+      margin: 20px auto;
+      font-size: 15px;
+    }
     button {
-      padding: 10px 20px;
+      display: block;
+      margin: 10px auto 30px;
+      padding: 12px 28px;
       font-size: 16px;
+      font-weight: bold;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       background: #007bff;
-      color: white;
+      color: #fff;
       cursor: pointer;
+      transition: 0.3s;
     }
     button:hover { background: #0056b3; }
+    .guide {
+      margin-top: 30px;
+    }
+    .guide h2 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .step {
+      background: #f9fcff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .step img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+    }
+    .step h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #222;
+    }
+    .step p {
+      font-size: 14px;
+      color: #555;
+    }
+    .highlight {
+      background: #e9f5ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    @media (max-width: 700px) {
+      .steps { grid-template-columns: 1fr; }
+    }header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      /*background: rgba(0, 0, 0, 0.6); */
+      color: rgb(0, 0, 0);
+      position: fixed;
+      top: 0;
+      left: 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    header h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav{
+      width:50%;
+   
+      align-items: right;
+    }
+    nav a {
+      
+     margin-left: 20px;
+     right: 0;     
+      text-decoration: none;
+      color: rgb(3, 1, 1);
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: rgb(0, 84, 133);
+    }
   </style>
 </head>
-<body>
-  <h1>📥 Instagram Chat (HTML) → Excel</h1>
-  <p>Upload your <b>messages.html</b> file</p>
-  
-  <input type="file" id="fileInput" accept=".html">
-  <br>
-  <button onclick="convertToExcel()">Convert & Download Excel</button>
+<body> <!-- Header -->
+  <header>
+    <h2>LifeUpDown</h2>
+    <nav>
+      <a href="/">Home</a>
+     
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>📥 Instagram Chat (HTML → Excel)</h1>
+    <p class="center">Upload your <b>messages.html</b> file below</p>
+    
+    <input type="file" id="fileInput" accept=".html">
+    <button onclick="convertToExcel()">Convert & Download Excel</button>
+
+    <div class="guide">
+      <h2>📌 Step-by-Step Guide</h2>
+      <div class="steps">
+        <div class="step">
+          <img src="https://img.icons8.com/color/96/instagram-new.png" alt="Instagram">
+          <h3>1. Export Instagram Data</h3>
+          <p>Go to Instagram → <span class="highlight">Settings → Privacy & Security → Download Data</span>.  
+          Request <b>HTML format</b>. Extract the ZIP and find <span class="highlight">messages.html</span>.</p>
+        </div>
+        <div class="step">
+          <img src="https://img.icons8.com/color/96/code-file.png" alt="Open Converter">
+          <h3>2. Open Converter</h3>
+          <p>Double-click this <span class="highlight">converter.html</span> file in your browser to launch the tool.</p>
+        </div>
+        <div class="step">
+          <img src="https://img.icons8.com/color/96/upload.png" alt="Upload">
+          <h3>3. Upload File</h3>
+          <p>Click <b>Choose File</b> and select <span class="highlight">messages.html</span> from Instagram data.</p>
+        </div>
+        <div class="step">
+          <img src="https://img.icons8.com/color/96/ms-excel.png" alt="Excel">
+          <h3>4. Convert & Download</h3>
+          <p>Click <b>Convert & Download Excel</b>. Your chats will download as <span class="highlight">instagram_chat.xlsx</span>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     function cleanText(text, limit = 1500) {
@@ -78,7 +212,6 @@
             // ✅ Skip if no message & no reel owner title
             if (!message && !reelOwner) return;
 
-            // Unique key for deduplication
             let key = sender + "|" + message + "|" + reelOwner + "|" + reelLink + "|" + timestamp;
 
             if (!uniqueSet.has(key)) {
@@ -100,6 +233,13 @@
 
           // Convert to worksheet
           const ws = XLSX.utils.json_to_sheet(messages);
+
+          // Auto-fit column widths
+          const colWidths = Object.keys(messages[0]).map(
+            key => ({ wch: Math.min(50, key.length + 20) })
+          );
+          ws['!cols'] = colWidths;
+
           const wb = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, "Chats");
 
