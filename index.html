@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life Up Down</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      transition: background-color 0.3s ease;
+      background-color: lightblue;
+    }
+    h1 {
+      color: white;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <h1>Life Up Down</h1>
+
+  <script>
+    let lastY = 0;
+    let lastX = 0;
+
+    document.addEventListener("mousemove", function(event) {
+      if (event.clientY < lastY) {
+        // Mouse moving UP
+        document.body.style.backgroundColor = "rgb(112, 109, 255)";
+      } else if (event.clientY > lastY) {
+        // Mouse moving DOWN
+        document.body.style.backgroundColor = "rgb(250, 70, 70)";
+      } else if (event.clientX < lastX) {
+        // LEFT
+        document.body.style.backgroundColor = "skyblue";
+      } else if (event.clientX > lastX) {
+        // RIGHT
+        document.body.style.backgroundColor = "orange";
+      }
+      lastX = event.clientX;
+      lastY = event.clientY;
+    });
+  </script>
+</body>
+</html>
