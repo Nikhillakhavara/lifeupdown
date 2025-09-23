@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://nikhillakhavara.github.io/lifeupdown/sitemap.xml
